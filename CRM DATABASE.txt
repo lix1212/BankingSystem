@@ -1,0 +1,128 @@
+#DDL COMMANDS:
+
+create table customer
+(
+Customer_id int primary key,
+Customer_name varchar(50) not null,
+Date_of_birth date not null,
+Age int not null;
+Gender varchar(10) not null,
+Mobile_number varchar(10) not null,
+Email_id varchar(50) not null
+);
+
+create table product
+(
+Plan_number int primary key,
+Plan_name varchar(50),
+Plan_type varchar(20),
+Plan_term int,
+Plan_sum_assured float,
+Plan_premium_rate float
+);
+
+create table compfeed
+(
+Comp_feed_number primary key,
+Plan_number int,
+Customer_id int,
+Type varchar(50), 
+Comp_feed_nature text,
+Comp_feed_description text,
+Comp_feed_date varchar(10)
+);
+
+create table survey
+(
+Survey_number int primary key,
+Customer_id int,
+Question1 text,
+Question2 text,
+Question3 text,
+Question4 text,
+Question5 text
+);
+
+create table payment
+(
+Transaction_id int primary key,
+Customer_id int,
+Plan_number int,
+Amount float,
+Payment_mode varchar(25),
+Payment_date date
+);
+
+create table policymaster
+(
+Policy_number int primary key,
+Customer_id int,
+Plan_name varchar(50),
+Plan_type varchar(20),
+Plan_term int,
+Plan_sum_assured float,
+Plan_premium float
+);
+
+#ALTER TABLE COMMANDS
+ALTER TABLE product ADD Remarks varchar(100) NOT null;
+ALTER TABLE survey ADD CONSTRAINT survey_fk FOREIGN KEY (Customer_id) REFERENCES customer (Customer_id);
+
+#INSERT VALUES INTO CUSTOMER
+
+insert into customer values (123456,'Mansi Pal','2001-12-12', 20,'Female','9082075667','palmansi2001@gmail.com');
+insert into customer values (234567,'Madhavi Parmar','2001-10-08',25,'Female','8882075656','madhaviparmar@gmail.com');
+insert into customer values (345678,'Rishikesh Naware','2000-06-24',23,'Male','8092075600','rishikesh@gmail.com');
+insert into customer values (456789,'Vivek Ruhela','1999-01-16',27,'Male','5672075678','ruhelavivek@gmail.com');
+insert into customer values (567890,'Aditya Sharma','2000-06-28',29,'Male','9081565690','adityasharma2000@gmail.com');
+
+#INSERT VALUES INTO PRODUCT
+
+insert into product values (101,'Endowment Plan','Endowment',25,500000,12);
+insert into product values (102,'Whole Life Plan','Whole life',30,900000,11);
+insert into product values (103,'Moneyback Plan','Moneyback',15,700000,15);
+insert into product values (104,'Term Assurance Plan','Term',20,800000,10);
+insert into product values (105,'Pension Plan','Pension',35,600000,10);
+
+# INSERT VALUES INTO PAYMENT
+
+insert into payment values (21000,123456,101,15000,'Credit Card','2020-10-09');
+insert into payment values (21001,234567,102,16000,'Debit Card','2019-11-19');
+insert into payment values (21002,123456,101,17000,'Credit Card','2018-06-29');
+insert into payment values (21003,123456,103,18000,'Credit Card','2017-01-16');
+insert into payment values (21004,345678,105,19000,'Netbanking','2020-09-09');
+
+# INSERT VALUES INTO SURVEY
+
+insert into survey values(10001,123456,'Which plan do you prefer?-Endowment Plan,Term assurance Plan','What is your criteria while taking insurance?-Maximum risk cover','Do you prefer term assurance plan?-Yes','What is your purpose of buying insurance?-Family protection,risk cover and saving','What is your family monthly income?-75000')
+
+insert into survey values(10002,234567,'Which plan do you prefer?-Whole life Plan','What is your criteria while taking insurance?-Maximum risk cover','Do you prefer term assurance plan?-No','What is your purpose of buying insurance?-Family protection and saving','What is your family monthly income?-80000')
+
+insert into survey values(10003,123456,'Which plan do you prefer?-Moneyback Plan,Term assurance Plan','What is your criteria while taking insurance?-Risk cover in moderate premium','Do you prefer term assurance plan?-Yes','What is your purpose of buying insurance?-Saving','What is your family monthly income?-90000')
+
+# INSERT VALUES INTO COMPFEED
+
+insert into compfeed values (20001,101,123456,'Complaint','About claim payment','I have not received claim payment under my policy number','2020-06-19');
+
+insert into compfeed values (20002,102,234567,'Feedback','About loan payment','Thanks for prompt action under my loan request','2019-11-20');
+
+insert into compfeed values (20003,103,345678,'Complaint','About survival benefit payment','I have not received survival benefit payment under my policy number','2020-09-26');
+
+# INSERT VALUES INTO POLICYMASTER
+
+insert into policymaster values (123456780,123456,'Endowment Plan','Endowment',25,500000,12);
+insert into policymaster values (123456781,234567,'Whole Life Plan','Whole life',30,900000,11);
+insert into policymaster values(123456782,345678,'Moneyback Plan','Moneyback',15,700000,15);
+insert into policymaster values(123456783,456789,'Term Assurance Plan','Term',20,800000,10);
+insert into policymaster values(123456784,567890,'Pension Plan','Pension',35,600000,10);
+ 
+
+SELECT * FROM customer, payment WHERE customer.Customer_id IN (SELECT payment.Customer_id FROM payment WHERE Payment_mode='Credit Card' AND customer.Customer_id=payment.Customer_id);
+UPDATE customer SET Mobile_number='8892674589' WHERE Customer_id=123456;
+SELECT * FROM customer WHERE Customer_id=123456
+
+SELECT c1.Customer_name, c1.Email_id, c1.Mobile_number, c2.Payment_date, c2.Payment_mode from customer c1 INNER JOIN payment c2 on c1.Customer_id=c2.Customer_id;
+SELECT * FROM customer c1 JOIN policymaster p1 ON c1.Customer_id=p1.Customer_id;
+SELECT * FROM customer c1 LEFT OUTER JOIN payment p1 ON c1.Customer_id=p1.Customer_id;
+SELECT * FROM customer cross join payment;
+SELECT c1.Customer_name, c1.Email_id, c1.Mobile_number from customer c1 inner join payment p1 on c1.Customer_id=p1.Customer_id;
